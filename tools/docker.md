@@ -1,3 +1,20 @@
+### 拉取镜像 docker pull
+从国内镜像库拉取
+
+`docker pull registry.docker-cn.com/myname/myrepo:mytag`
+
+或修改配置文件`/etc/docker/daemon.json`
+
+(Mac 下为 `/System/Volumes/Data/Users/lwz/.docker/daemon.json`
+  或 `/Users/lwz/.docker/daemon.json`)
+```
+sudo vim /etc/docker/daemon.json (Mac 下为 /System/Volumes/Data/Users/lwz/.docker/daemon.json)
+{
+ "registry-mirrors": ["https://registry.docker-cn.com"]
+}
+```
+* 中科大镜像：https://docker.mirrors.ustc.edu.cn/
+* 网易镜像：http://hub-mirror.c.163.com
 ### 显示镜像 docker images
 ### 删除镜像 docker rmi IMAGE_ID
 ### 镜像保存 docker save -o xxx.tar

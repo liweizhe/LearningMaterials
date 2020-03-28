@@ -1,26 +1,31 @@
-### docker 运行，设置root
+### install on centos
 ```
+yum install wget
+wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm && rpm -ivh mysql-community-release-el7-5.noarch.rpm
+ls -1 /etc/yum.repos.d/mysql-community*
+yum install mysql-server
+mysql_secure_installation
+
+```
+uninstall
+```
+yum remove mysql mysql-server
+mv /var/lib/mysql /var/lib/mysql_old_backup
+rm -vR /var/lib/mysql
+```
+### docker install
+获取镜像（默认 debian 系统），创建容器时设置 mysql 密码 123456 、映射端口 3306
+```
+docker pull mysql:5.7
 docker run -d -p 3306:3306 --name=mysql --env="MYSQL_ROOT_PASSWORD=123456" mysql:5.7
 docker exec -it mysql /bin/bash
 ```
-### mysql
-```
-root@6d71bd4bb15c:/# mysql -u root -p
-Enter password:
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 2
-Server version: 5.7.29 MySQL Community Server (GPL)
 
-Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+获取 centos7 系统的 mysql 镜像：
+`docker pull centos/mysql-57-centos7:5.7`
+`docker run -d --name mysql_database -e MYSQL_USER=user -e MYSQL_PASSWORD=pass -e MYSQL_DATABASE=db -p 3306:3306 centos/mysql-57-centos7:5.7`
 
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql>
-```
+[官方镜像安装教程](https://dev.mysql.com/doc/mysql-installation-excerpt/5.6/en/docker-mysql-getting-started.html)
 ### 创建数据库、表
 所有 sql 语句为了区分关键字与普通字符，引入反引号 \` ，列名称均适用反引号，普通字符使用但引号。
 ```
@@ -37,7 +42,7 @@ mysql> create table if not exists `think_data`(
     -> )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 Query OK, 0 rows affected (0.03 sec)
 ```
-
+B7d1PlC>?wrg
 ### MySQL Workbench
 ```
 use `demo`;
@@ -55,6 +60,7 @@ show tables;
 ```
 
 # Incorrect integer value: ''
+### Try Use NULL install of ''
 Try to edit your my.cf and comment the original sql_mode and add sql_mode = "".
 
 `vi /etc/mysql/my.cnf`

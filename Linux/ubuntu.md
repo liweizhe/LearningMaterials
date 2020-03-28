@@ -1,4 +1,25 @@
 # Ubuntu16.04
+### 修改镜像源
+修改 sources.list
+`$sudo gedit /etc/apt/sources.list`
+文件首部输入
+```
+deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+```
+更新缓存
+```
+$sudo apt-get update
+$sudo apt-get upgrade
+```
 ### 断点续传
 > rsync -e "ssh -i security-team-aws.pem" -v --progress ec2-user@34.209.2.17:/home/ec2-user/hash/1.tar.gz ./1.tar.gz
 

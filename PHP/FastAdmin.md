@@ -1,3 +1,51 @@
+# install on mac
+## download
+full pakage archive link: https://www.fastadmin.net/download/full.html
+解压到 /Users/lwz/Github/fastadmin
+## use MxSrvs
+使用集成环境 MxSrvs。
+dmg link: http://www.xsrvs.com/
+
+### Config
+主要是 nginx 的配置，在集成环境 MxSrvs 中：Config Edit->Nginx->vhost+
+写入以下配置
+```
+server {
+	listen			80;
+	server_name		www.demo.com;
+	root			/Users/lwz/GitHub/fastadmin/public;
+	access_log		/Applications/MxSrvs/logs/fastadmin.log;
+	location ~ \.php(.*)$ {
+        include        fastcgi_params;
+        #端口号请根据实际情况填写
+        fastcgi_pass 127.0.0.1:10080;
+        fastcgi_index  index.php;
+        fastcgi_split_path_info  ^(.+\.php)(.*)$;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_param  PATH_INFO  $fastcgi_path_info;
+        fastcgi_param  PATH_TRANSLATED  $document_root$fastcgi_path_info;
+        fastcgi_read_timeout 60s;
+    }
+	location / {
+        index  index.php index.html index.htm;
+        #以下代码必须有
+        if (!-e $request_filename) {
+            rewrite  ^(.*)$  /index.php?s=$1  last;
+            break;
+        }
+    }
+}
+```
+启动服务：
+```
+start nginx
+start php
+start mysql
+```
+### System Settings
+无法验证开发者的应用按以下顺序来添加信任。
+System Preference->Security & Privacy->General->Click the lock to make changes
+
 # install on centos 8.1
 ## install package
 necessary package

@@ -1,12 +1,12 @@
-# install on mac
-## download
+# 1 install on mac
+## 1.1 download
 full pakage archive link: https://www.fastadmin.net/download/full.html
 解压到 /Users/lwz/Github/fastadmin
-## use MxSrvs
+## 1.2 use MxSrvs
 使用集成环境 MxSrvs。
 dmg link: http://www.xsrvs.com/
 
-### Config
+### 1.2.1 Config
 主要是 nginx 的配置，在集成环境 MxSrvs 中：Config Edit->Nginx->vhost+
 写入以下配置
 ```
@@ -42,9 +42,204 @@ start nginx
 start php
 start mysql
 ```
-### System Settings
+访问 `www.demo.com`
+### 1.2.2 System Settings
 无法验证开发者的应用按以下顺序来添加信任。
 System Preference->Security & Privacy->General->Click the lock to make changes
+
+
+# 2 插件开发
+## 2.1 创建插件
+进入`think`的根目录，此处为`/Users/lwz/Github/fastadmin`，执行命令创建 mydemo:
+> php thnk addon -a mydemo -c create
+
+执行之后会在根目录 addons 下出现一个 mydemo 文件夹，目录树如下
+```
+➜  fastadmin git:(master) ✗ tree addons/mydemo
+addons/mydemo
+├── Mydemo.php
+├── config.php
+├── controller
+│   └── Index.php
+└── info.ini
+
+1 directory, 4 files
+➜  fastadmin git:(master) ✗ ➜  
+```
+通过`http://www.demo.com/addons/mydemo`访问插件页面。
+同时在后台“管理->插件管理->本地插件”也将出现创建的插件
+
+## 2.2 目录结构
+FastAdmin所有插件都是存放在`addons`目录，一个插件一个目录，目录名必须和插件标识相同，且全部为小写，不允许出现大写或下划线等特殊符号。
+```
+mydemo //插件标识
+├── application    //此文件夹中所有文件会覆盖到根目录的/application文件夹
+├── assets        //此文件夹中所有文件会复制到/public/assets/addons/blog文件夹
+├── controller    //此文件夹为插件控制器目录
+├── lang            //此文件夹为插件语言包目录
+├── model            //此文件夹为插件模型目录
+├── public        //此文件夹中所有文件会覆盖到根目录的/public文件夹
+├── view            //此文件夹为插件视图目录
+├── Mydemo.php        //此文件为插件核心安装卸载控制器,必需存在
+├── bootstrap.js    //此文件为插件JS启动文件
+├── LICENSE        //版权文件
+├── config.php    //插件配置文件,我们在后台插件管理中点配置按钮时配置的文件,必需存在
+├── info.ini        //插件信息文件,用于保存插件基本信息，插件开启状态等,必需存在
+└── install.sql    //插件数据库安装文件,此文件仅在插件安装时会进行导入
+```
+其中的`application`和`public`文件夹会覆盖到根目录, 主要用于后台管理功能的开发
+## 2.3 内置函数
+### 2.3.1 addon_url
+生成插件控制器方法的 url
+#### 参数列表
+名称|描述
+:-:|:-:
+$url	|插件标识/控制器名/方法名
+$vars	|变量参数，默认为空
+$suffix	|是否生成后缀，默认为true
+$domain	|域名，默认不包含域名
+#### 调用方法
+```
+$url1 = addon_url('mydemo/index/index');
+$url2 = addon_url('mydemo/index/index', [':name'=>'myname', 'id'=>123]);
+$url3 = addon_url('mydemo/index/index', [':name'=>'myname', 'id'=>123], true, true)
+```
+### 2.3.2 get_addon_list
+获得插件列表，此函数将返回本地已安装的插件列表。
+输入`$addonList = get_addon_list();`调用，返回二维数组。
+### 2.3.3 get_addon_info
+pass
+
+## 2.4 数据库
+pass
+
+## 2.5 配置
+配置文件在插件目录下，此处为 `addons/mydemo/config.php`，配置文件需要返回一个多位数组，例如：
+```
+<?php
+
+return [
+    [
+        //配置名称,该值在当前数组配置中确保唯一
+        'name'    => 'yourname',
+        //配置标题
+        'title'   => '配置标题',
+        //配置类型,支持string/text/number/datetime/array/select/selects/image/images/file/files/checkbox/radio/bool
+        'type'    => 'string',
+        //配置select/selects/checkbox/radio/bool时显示的列表项
+        'content' => [
+            '1' => '显示',
+            '0' => '不显示'
+        ],
+        //配置值
+        'value'   => '1',
+        //配置验证规则,更之规则可参考nice-validator文件
+        'rule'    => 'required',
+        'msg'     => '验证失败提示文字',
+        'tip'     => '字段填写帮助',
+        'ok'      => '验证成功提示文字',
+        'extend'  => ''
+    ],
+    [
+        'name'    => 'yourname2',
+        'title'   => '配置标题2',
+        'type'    => 'radio',
+        'content' => [
+            '1' => '显示',
+            '0' => '不显示'
+        ],
+        'value'   => '1',
+        'rule'    => 'required',
+        'msg'     => '验证失败提示文字',
+        'tip'     => '字段填写帮助',
+        'ok'      => '验证成功提示文字',
+        'extend'  => ''
+    ],
+    [
+        'name'    => '__tips__',
+        'title'   => '温馨提示',
+        'type'    => 'string',
+        'content' =>
+            array(),
+        'value'   => '该提示将出现的插件配置头部，通常用于提示和说明',
+        'rule'    => '',
+        'msg'     => '',
+        'tip'     => '',
+        'ok'      => '',
+        'extend'  => '',
+    ],
+];
+```
+
+添加上述配置信息后，可在后台管理页面：后台管理->插件管理 中找到对应的 `配置` 选项。
+
+#### 参数说明
+pass
+
+## 2.6 控制器
+FastAdmin插件中的控制器和ThinkPHP5的控制器类似，
+请参考：https://www.kancloud.cn/manual/thinkphp5/118047
+### 控制器定义
+典型的控制器代码如下，位于`adons/mydemo/Index.php`：
+```
+<?php
+
+namespace addons\mydemo\controller;
+
+use think\addons\Controller;
+
+class Index extends Controller
+{
+
+    public function index()
+    {
+        $this->error("当前插件暂无前台页面");
+    }
+
+}
+```
+### 控制器请求
+`http://www.demo.addons/mydemo/控制器名/控制器方法`
+
+### 基类控制器
+FastAdmin的基类控制器`\think\addons\Controller`位于`vendor/karsonzhang/fastadmin-addons/src/addons/Controller.php`。
+
+### 基类属性
+```
+protected $addon = null; //插件名称
+protected $controller = null; //控制器名称
+protected $action = null; //方法名称
+/**
+ * 无需登录的方法,同时也就不需要鉴权了
+ * @var array
+ */
+protected $noNeedLogin = ['*'];
+/**
+ * 无需鉴权的方法,但需要登录
+ * @var array
+ */
+protected $noNeedRight = ['*'];
+/**
+ * 权限Auth，如果用户是登录太，可以直接从中读取用户信息
+ * @var Auth
+ */
+protected $auth = null;
+
+/**
+ * 布局模板，默认不启用
+ * @var string
+ */
+protected $layout = null;
+```
+
+## 2.7 模型
+FastAdmin插件中的模型使用方法完全同ThinkPHP5的模型使用相同，
+参考：https://www.kancloud.cn/manual/thinkphp5/135186
+
+## 2.8 视图
+FastAdmin插件中的视图使用方法完全同ThinkPHP5的视图使用相同，
+参考：https://www.kancloud.cn/manual/thinkphp5/118112
+
 
 # install on centos 8.1
 ## install package
@@ -85,19 +280,8 @@ download from git:
 [root@77109bf8bf5a fastadmin]# bower install --allow-root
 [root@77109bf8bf5a fastadmin]# composer config -g repo.packagist composer https://packagist.phpcomposer.com
 [root@77109bf8bf5a fastadmin]# composer install
-Loading composer repositories with package information
-Updating dependencies (including require-dev)
-Your requirements could not be resolved to an installable set of packages.
-
-  Problem 1
-    - endroid/qr-code 1.9.3 requires ext-gd * -> the requested PHP extension gd is missing from your system.
-    - endroid/qr-code 1.9.2 requires ext-gd * -> the requested PHP extension gd is missing from your system.
-    - endroid/qr-code 1.9.1 requires ext-gd * -> the requested PHP extension gd is missing from your system.
-    - endroid/qr-code 1.9.0 requires ext-gd * -> the requested PHP extension gd is missing from your system.
-    - Installation request for endroid/qr-code ^1.9 -> satisfiable by endroid/qr-code[1.9.0, 1.9.1, 1.9.2, 1.9.3].
-You can also run `php --ini` inside terminal to see which files are used by PHP in CLI mode.
 ```
-安卓验证码依赖库下载失败。可以用`php --ini`查看已加载的库。
+可以用`php --ini`查看已加载的库。
 
 [下载第三方包](https://www.fastadmin.net/download/third.html)
 解压缩并覆盖到 fastadmin文件夹下。

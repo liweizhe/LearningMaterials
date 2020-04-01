@@ -1,13 +1,19 @@
-### add indexes
+# 常用指令
+## 添加索引
+add indexes
 > db.clt_name.ensureIndex({'sha256': 1})
 
 or create index at background
 > db.clt_name.ensureIndex({'sha256':1},{background:true})
 
-### search created indexes:
+### 查询已创建索引
+search created indexes:
 > db.new_hash.getIndexes()
+## 更改表的列名
+`{$rename: { <field1>: <newName1>, <field2>: <newName2>, ... } }`
 
-
+example:
+`db.job.updateMany({'Tel':{$exists:true}},{$rename:{'Tel':'tel'}})`
 ### MongoDB CMD  
 > help	Show help.    
 db.help()	Show help for database methods.  

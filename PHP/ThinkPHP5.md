@@ -1,3 +1,20 @@
+# 模块化设计
+## 新建模块
+进入根目录，执行：
+
+`php think build --module demo`
+
+生成 `demo` 模块，目录树如下：
+```
+➜  ixmrc_yxwj git:(master) ✗ tree application/demo
+application/demo
+├── common.php    #模块公共文件
+├── config.php    #模块配置文件
+├── controller    #控制器目录
+│   └── Index.php
+├── model         #模型目录
+└── view          #视图目录
+```
 # 六、模型与关联
 对象-关系映射(Object/Relation Mapping, ORM for short)。
 一般来说，每个数据表会和一个“模型”对应。

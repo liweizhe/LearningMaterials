@@ -240,6 +240,35 @@ FastAdmin插件中的模型使用方法完全同ThinkPHP5的模型使用相同�
 FastAdmin插件中的视图使用方法完全同ThinkPHP5的视图使用相同，
 参考：https://www.kancloud.cn/manual/thinkphp5/118112
 
+## 2.9 第三方类库
+在FastAdmin插件开发过程中经常需要引用于第三方的类库，此时可以采用以下两种方式进行引入。
+### 手动修改文件命名空间
+如果我们引入的第三方类库文件比较少，我们可以采取手动修改文件命名空间的功能。例如我们需要引入
+HashMap.php 这个类库，这个类库功能比较单一，只有一个文件，此时我们可以将 HashMap.php
+文件放在 addons/mydemo/library 目录下，然后再修改 HashMap.php 中的 namespace，
+修改为：
+```
+<?php
+
+namespace addons\mydemo\library;
+
+class HashMap
+{
+    //类库代码
+}
+```
+通过以上修改后，可以在服务端任何位置均可使用
+```
+$hashMap = new \addonos\mydemo\library\HaspMap();
+$result = $hashMap->myNormalMethod();
+```
+### 通过行为载入命名空间
+[reference](https://doc.fastadmin.net/developer/96.html)
+
+pass
+## 2.10 伪静态
+[reference](https://doc.fastadmin.net/developer/98.html)
+
 
 # install on centos 8.1
 ## install package

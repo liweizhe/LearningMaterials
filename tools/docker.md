@@ -157,9 +157,9 @@ myserver            latest              49a4a4fc0a40        6 seconds ago       
 ubuntu              18.04               72300a873c2c        3 weeks ago         64.2MB
 ubuntu              latest              72300a873c2c        3 weeks ago         64.2MB
 ```
-### 加载镜像并映射宿主机文件夹和端口号
+### 加载镜像创建容器并映射宿主机文件夹和端口号
 ```
-➜  ~ docker run  -it --name UNP -p 8080:80 -v "$PWD/html":/var/www/html/ -it ubuntu:18.04 /bin/bash
+➜  ~ docker run -it --name UNP -p 8080:80 -v "$PWD/html":/var/www/html/ -it ubuntu:18.04
 root@afbc075c3fec:/# which php
 /usr/bin/php
 root@afbc075c3fec:/# exit
@@ -174,8 +174,6 @@ d9af227e280f        ubuntu              "/bin/bash"         2 hours ago         
 
 ### docker镜像保存，导入
 ```
-zzh@ubuntu:~$ docker images
-Cannot connect to the Docker daemon. Is the docker daemon running on this host?
 zzh@ubuntu:~$ sudo docker images
 REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
 gitlab/gitlab-ce          latest              6099ff61e4ff        4 months ago        1.309 GB

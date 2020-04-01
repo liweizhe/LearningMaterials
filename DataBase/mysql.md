@@ -42,7 +42,12 @@ mysql> create table if not exists `think_data`(
     -> )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 Query OK, 0 rows affected (0.03 sec)
 ```
-B7d1PlC>?wrg
+### 显示表的详细信息
+`show full fields from table_name;`
+### 返回表的记录数
+`select count('') from table`
+### 修改表名
+`ALTER TABLE old_name RENAME new_name`
 ### MySQL Workbench
 ```
 use `demo`;
